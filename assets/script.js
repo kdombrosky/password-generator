@@ -4,47 +4,67 @@ var upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 var lowerCase = "abcdefghijklmnopqrstuvwxyz";
 var numbers = "0123456789";
 var symbols = '!@#$%^&*()-_=+[]{}\|;:"<>.,/?~`' + "'"; 
-var newString = lowerCase + upperCase + symbols;
-
-// Generate random combination 
-// PSEUDO CODE
-// 1. Prompt for length
-// 2. Make sure length is between 8-128 
-// 3. prompt for criteria
-// 4. make sure at least 1 criteria is selected
-// 5. IF criteria is selected, CONCATENATE criteria to string var newString = lowerCase + upperCase
-// 6. use loop to output random index's from the string into an array (add strings to array for i=0; i<confirmLength;i++)
-// 7. return string to writePassword
 
 
+// Function for User Prompts 
+function generateLength() {
+    var confirmLength = prompt("What is your desired password length? Select between 8 and 128 characters.");
+    var passwordLength = parseInt(confirmLength); 
 
+    if(!passwordLength){
+        alert("You must choose a valid option."); 
+        return generateLength();
+    } else if(passwordLength < 8 || passwordLength > 128) {
+        alert("Please pick a number between 8 and 128.");
+        return generateLength();
+    } else {
+        return passwordLength;
+    }
+}
+
+function generateCriteria() { 
+    var confirmUppercase = confirm("Would you like to include uppercase letters?");
+    var confirmLowercase = confirm("Would you like to include lowercase letters?");
+    var confirmNumber = confirm("Would you like to include numbers?");
+    var confirmSpecial = confirm("Would you like to include special characters?");
+
+    if(!confirmUppercase && !confirmLowercase && !confirmNumber && !confirmSpecial) {
+        alert("You must choose at least 1 criteria!");
+        return generateCriteria();
+    } else {
+        var criteria = {
+            uppercase: confirmUppercase,
+            lowercase: confirmLowercase,
+            number: confirmNumber,
+            specialChar: confirmSpecial
+        }
+
+        return criteria;
+    }
+} 
 
 // Function to generate and return the password to writePassword()
 function generatePassword() {
-    // USER PROMPTS
-    var confirmLength = prompt("What is your desired password length? Select between 8 and 128 characters.");
-    var passwordLength = parseInt(confirmLength);
-    
-    if(!passwordLength){
-        alert("You need to pick a valid option!"); 
-        generatePassword();
-    } else if(passwordLength < 8 || passwordLength > 128) {
-        alert("Please pick a number between 8 and 128");
-        generatePassword();
-    } else {
-        var confirmUppercase = confirm("Would you like to include uppercase letters?");
-        var confirmLowercase = confirm("Would you like to include lowercase letters?");
-        var confirmNumber = confirm("Would you like to include numbers?");
-        var confirmSpecial = confirm("Would you like to include special characters?");
+    // USER PROMPTS BY FUNCTION 
+    var passwordLength = generateLength();
+
+    var userCriteria = generateCriteria();
+
+    // PASSWORD GENERATION 
+    var tempString = ""; 
+    if(userCriteria.uppercase) tempString += upperCase; 
+    if(userCriteria.lowercase) tempString += lowerCase;
+    if(userCriteria.number) tempString += numbers;
+    if(userCriteria.specialChar) tempString += symbols;
+
+    var generatedPassword = "";
+    for(i=0; i<passwordLength; i++) {
+        generatedPassword += tempString.charAt(Math.floor(Math.random() * tempString.length));
     }
-    
-    
-    
-    
-    return "a string"; 
+
+    // RETURN STRING VALUE BELOW
+    return generatedPassword;
 }
-
-
 
 
 
